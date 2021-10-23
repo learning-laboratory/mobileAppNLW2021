@@ -3,8 +3,12 @@ import { COLORS, FONTS } from "../../theme";
 
 export const styles = StyleSheet.create({
   container: {
-    width: "100%",
-    marginBottom: 36,
+    flex: 1,
+    paddingHorizontal: 20,
+  },
+  content: {
+    paddingTop: 135,
+    paddingBottom: 184,
   },
   message: {
     fontSize: 15,
@@ -24,5 +28,8 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
+  containerMoti: {
+    width: "100%",
+    marginBottom: 36,
+  },
 });
-1;

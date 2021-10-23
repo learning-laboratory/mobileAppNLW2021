@@ -1,17 +1,35 @@
-import React from 'react';
+import { MotiView } from "moti";
+import React from "react";
+import { Text, View } from "react-native";
+import { UserPhoto } from "../UserPhoto";
+import { styles } from "./styles";
 
-import {
-  View
-} from 'react-native';
+export type MessageProps = {
+  id: string;
+  text: string;
+  user: {
+    name: string;
+    avatar_url: string;
+  };
+};
 
-import { styles } from './styles';
+type Props = {
+  data: MessageProps;
+};
 
-export function Message(){
+export function Message({ data }: Props) {
   return (
-    <View style={styles.container}>
-        <Text style={styles.message}>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Suscipit, cum.
-        </Text>
-    </View>
+    <MotiView
+      from={{ opacity: 0, translateY: -50 }}
+      animate={{ opacity: 1, translateY: 0 }}
+      transition={{ type: "timing", duration: 700 }}
+      style={styles.container}
+    >
+      <Text style={styles.message}>{data.text}</Text>
+      <View style={styles.footer}>
+        <UserPhoto imageUri={data.user.avatar_url} sizes="SMALL" />
+        <Text style={styles.userName}>{data.user.name}</Text>
+      </View>
+    </MotiView>
   );
 }

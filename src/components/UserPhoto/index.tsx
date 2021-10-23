@@ -3,7 +3,7 @@ import { Image } from "react-native";
 import { styles } from "./styles";
 import avatarImg from "../../assets/avatar.png";
 import { LinearGradient } from "expo-linear-gradient";
-import { COLORS } from "../../../files/src/theme";
+import { COLORS } from "../../theme";
 
 type ImageProps = {
   imageUri: string | undefined;
