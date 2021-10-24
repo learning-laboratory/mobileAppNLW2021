@@ -7,8 +7,8 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   content: {
-    paddingTop: 135,
-    paddingBottom: 184,
+    paddingTop: 70,
+    paddingBottom: 70,
   },
   message: {
     fontSize: 15,

@@ -1,20 +1,41 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { ScrollView } from "react-native";
 import { styles } from "./styles";
-import { MotiView } from "moti";
-import { Text, View } from "react-native";
-import { UserPhoto } from "../UserPhoto";
+import { Message, MessageProps } from "../Message";
+import { api } from "../../services/api";
+import { io } from "socket.io-client";
+
+let messageQueue: MessageProps[] = [];
+const socket = io(String(api.defaults.baseURL));
+socket.on("new_message", (newMessage) => {
+  messageQueue.push(newMessage);
+});
 
 export function MessageList() {
-  const message = {
-    id: "1",
-    text: "Não vejo a hora de começar esse evento, com certeza vai ser o melhor de todos os tempos, vamooo pra cima! 🔥🔥",
-    user: {
-      name: "Dianne Russell",
-      avatar_url: "https://randomuser.me/api/portraits/men/32.jpg",
-    },
-  };
+  const [currentMessages, setCurrentMessages] = useState<MessageProps[]>([]);
+  useEffect(() => {
+    async function fetchMessages() {
+      const messagesResponse = await api.get<MessageProps[]>("/messages/last3");
+      setCurrentMessages(messagesResponse.data);
+    }
+    fetchMessages();
+  }, []);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (messageQueue.length > 0) {
+        setCurrentMessages((prevState) => [
+          messageQueue[0],
+          prevState[0],
+          prevState[1],
+        ]);
+        messageQueue.shift();
+      }
+    }, 3000);
+    console.log(currentMessages)
+    return () => clearInterval(timer);
+  });
 
   return (
     <ScrollView
@@ -22,18 +43,9 @@ export function MessageList() {
       contentContainerStyle={styles.content}
       keyboardShouldPersistTaps="never"
     >
-      <MotiView
-        from={{ opacity: 0, translateY: -50 }}
-        animate={{ opacity: 1, translateY: 0 }}
-        transition={{ type: "timing", duration: 700 }}
-        style={styles.containerMoti}
-      >
-        <Text style={styles.message}>{message.text}</Text>
-        <View style={styles.footer}>
-          <UserPhoto imageUri={message.user.avatar_url} sizes="SMALL" />
-          <Text style={styles.userName}>{message.user.name}</Text>
-        </View>
-      </MotiView>
+      {currentMessages.map((message) => (
+        <Message key={message.id} data={message} />
+      ))}
     </ScrollView>
   );
 }

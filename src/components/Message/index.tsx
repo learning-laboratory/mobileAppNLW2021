@@ -11,6 +11,7 @@ export type MessageProps = {
     name: string;
     avatar_url: string;
   };
+  user_id: string;
 };
 
 type Props = {
